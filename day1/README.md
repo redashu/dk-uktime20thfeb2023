@@ -141,9 +141,161 @@ Got permission denied while trying to connect to the Docker daemon socket at uni
 [root@docker-host ~]# 
 
 
+```
+
+### Docker architecture 
+
+<img src="darch.png">
+
+## SOme basic docker client side operations 
+
+### checking images on docker host 
+
+```
+[ashu@docker-host ~]$ docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[ashu@docker-host ~]$ 
 
 ```
 
+### pulling image 
+
+```
+[ashu@docker-host ~]$ docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[ashu@docker-host ~]$ 
+[ashu@docker-host ~]$ docker pull mysql
+Using default tag: latest
+latest: Pulling from library/mysql
+197c1adcd755: Pull complete 
+45f2e353f7d2: Pull complete 
+68ec6ece42ef: Pull complete 
+cfa4d9a7b88e: Pull complete 
+64cab5858b1d: Pull complete 
+92fcd248d982: Pull complete 
+88635e83312d: Pull complete 
+43f0427259d9: Pull complete 
+79828698a290: Pull complete 
+a8854781893e: Pull complete 
+6c8bdf3091d9: Pull complete 
+Digest: sha256:8653a170e0b0df19ea95055267def2615fc53c62df529e3750817c1a886485f0
+Status: Downloaded newer image for mysql:latest
+docker.io/library/mysql:latest
+[ashu@docker-host ~]$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        latest    57da161f45ac   11 days ago   517MB
+[ashu@docker-host ~]$ 
 
 
+
+```
+
+### pulling specfic version of mysql image 
+
+```
+[ashu@docker-host ~]$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        latest    57da161f45ac   11 days ago   517MB
+[ashu@docker-host ~]$ docker pull mysql:5.7
+5.7: Pulling from library/mysql
+e048d0a38742: Pull complete 
+c7847c8a41cb: Pull complete 
+351a550f260d: Pull complete 
+8ce196d9d34f: Pull complete 
+17febb6f2030: Pull complete 
+d4e426841fb4: Pull complete 
+fda41038b9f8: Pull complete 
+f47aac56b41b: Pull complete 
+a4a90c369737: Pull complete 
+97091252395b: Pull complete 
+84fac29d61e9: Pull complete 
+Digest: sha256:8cf035b14977b26f4a47d98e85949a7dd35e641f88fc24aa4b466b36beecf9d6
+Status: Downloaded newer image for mysql:5.7
+docker.io/library/mysql:5.7
+[ashu@docker-host ~]$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        latest    57da161f45ac   11 days ago   517MB
+mysql        5.7       be16cf2d832a   2 weeks ago   455MB
+[ashu@docker-host ~]$ 
+
+```
+
+### pulling and remove image from quay.io 
+
+```
+  25  docker pull quay.io/enxadahost/java
+   26  docker pull quay.io/cki/python
+   27  docker images
+   28  history 
+[ashu@docker-host ~]$ docker rmi  quay.io/cki/python
+Untagged: quay.io/cki/python:latest
+Untagged: quay.io/cki/python@sha256:ad2b66cfe3c46fb127625eca327e1e505b3a1c23a921bac0f78c5af84074210c
+Deleted: sha256:d2c03bd6c69c227ab74f306cb4a06f63629ddef600299a048fd7b29493b31367
+Deleted: sha256:bc76f5d4c3cb05c80e60590d5183b37f4871c16641fa7dc7ce2c2270d022d6e8
+Deleted: sha256:26353445c16fb7c576f4fd5aa5e7faa5e23679829434f04937890279a1ef13d6
+```
+
+### life of a container in running state 
+
+<img src="life.png">
+
+### creating container from alpine image
+
+```
+[ashu@docker-host ~]$ docker run  --name ashuc1 -d  alpine:latest   sleep 200 
+b73d6835f8131344524179f68457918c2d76242dfbeb8d7164e10ef4e6a83a54
+[ashu@docker-host ~]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND       CREATED         STATUS         PORTS     NAMES
+b73d6835f813   alpine:latest   "sleep 200"   4 seconds ago   Up 3 seconds             ashuc1
+[ashu@docker-host ~]$ 
+```
+
+### more commands 
+
+```
+[ashu@docker-host ~]$ docker ps  -a
+CONTAINER ID   IMAGE           COMMAND       CREATED              STATUS                          PORTS     NAMES
+8b46bbc2d362   alpine:latest   "sleep 200"   14 seconds ago       Up 14 seconds                             shamaa_c1
+4b73919d6f3c   alpine          "sleep 100"   30 seconds ago       Up 30 seconds                             star1
+2b5988ac84b3   alpine:latest   "sleep 150"   About a minute ago   Up About a minute                         serg1
+a4d2280042e5   alpine:latest   "sleep 200"   About a minute ago   Up About a minute                         ihtest
+f86e7fc2f4bf   alpine:latest   "sleep 10"    About a minute ago   Exited (0) About a minute ago             rbr1
+abd5bd67add8   alpine:latest   "sleep 200"   About a minute ago   Up About a minute                         mfarag
+2e1393505624   alpine:latest   "sleep 200"   2 minutes ago        Up 2 minutes                              ononzhc1
+a334f4f457ab   alpine:latest   "sleep 60"    2 minutes ago        Exited (0) About a minute ago             amr1
+2b03e2eb57ed   alpine:latest   "sleep 200"   2 minutes ago        Up 2 minutes                              csmisak_cont
+215ae0732ce1   alpine:latest   "sleep 240"   2 minutes ago        Up 2 minutes                              SudTestContainer
+b73d6835f813   alpine:latest   "sleep 200"   3 minutes ago        Exited (0) 29 seconds ago                 ashuc1
+[ashu@docker-host ~]$ 
+[ashu@docker-host ~]$ docker  start  ashuc1 
+ashuc1
+[ashu@docker-host ~]$ docker ps
+CONTAINER ID   IMAGE           COMMAND       CREATED              STATUS              PORTS     NAMES
+f6b9e47ec3b8   alpine:latest   "sleep 200"   29 seconds ago       Up 29 seconds                 lmchibante
+8b46bbc2d362   alpine:latest   "sleep 200"   51 seconds ago       Up 51 seconds                 shamaa_c1
+4b73919d6f3c   alpine          "sleep 100"   About a minute ago   Up About a minute             star1
+2b5988ac84b3   alpine:latest   "sleep 150"   2 minutes ago        Up 2 minutes                  serg1
+a4d2280042e5   alpine:latest   "sleep 200"   2 minutes ago        Up 2 minutes                  ihtest
+abd5bd67add8   alpine:latest   "sleep 200"   2 minutes ago        Up 2 minutes                  mfarag
+2e1393505624   alpine:latest   "sleep 200"   3 minutes ago        Up 3 minutes                  ononzhc1
+215ae0732ce1   alpine:latest   "sleep 240"   3 minutes ago        Up 3 minutes                  SudTestContainer
+b73d6835f813   alpine:latest   "sleep 200"   4 minutes ago        Up 2 seconds                  ashuc1
+[ashu@docker-host ~]$ 
+```
+
+### stopping a running container 
+
+```
+[ashu@docker-host ~]$ docker  stop  ashuc2
+ashuc2
+```
+### removing a dead container / exit container 
+
+```
+[ashu@docker-host ~]$ docker  rm  ashuc1 
+ashuc1
+[ashu@docker-host ~]$ 
+
+
+```
 
