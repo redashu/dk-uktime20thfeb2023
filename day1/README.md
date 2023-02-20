@@ -129,6 +129,21 @@ Got permission denied while trying to connect to the Docker daemon socket at uni
 
 ```
 
+### solution for a single and all users 
+
+```
+[root@docker-host ~]# usermod -aG docker ashu 
+[root@docker-host ~]# 
+[root@docker-host ~]# for  i in `ls /home`
+> do
+> usermod -aG docker $i
+> done
+[root@docker-host ~]# 
+
+
+
+```
+
 
 
 
