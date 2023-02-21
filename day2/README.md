@@ -106,6 +106,29 @@ nginx                alpine        2bc7edbc3cf2   9 days ago       40.7MB
 bash                 latest        4f9df00fa318   10 days ago      12.3MB
 ```
 
+### creating container using above docker image we build 
+
+```
+[ashu@docker-host ashu-app-images]$ docker  run -d -it --name ashuc11 ashupy:1.1  
+ff2569469ba39bab2a8c6a9a27a461d0c63badfe4fe33642979b27866cd62e85
+[ashu@docker-host ashu-app-images]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED             STATUS             PORTS     NAMES
+8c3fbcac6475   rakeshpy:1.1    "python /mycode/ashu…"   2 seconds ago       Up 1 second                  rakeshC1
+ff2569469ba3   ashupy:1.1      "python /mycode/ashu…"   10 seconds ago      Up 9 seconds                 ashuc11
+```
+
+### checking output 
+
+```
+[ashu@docker-host ashu-app-images]$ docker logs  ashuc11
+Hello all , welcome to python..!!
+Welcome to Docker training..
+I am ashutoshh singh   ..!!
+______________________
+Hello all , welcome to python..
+```
+
+
 
 
 
