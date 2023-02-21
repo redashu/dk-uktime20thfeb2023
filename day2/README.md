@@ -130,6 +130,49 @@ Hello all , welcome to python..
 
 
 
+### New dockerfile example for python code 
+
+```
+FROM oraclelinux:8.5 
+# we are refering docker hub python image if not present in docker host 
+LABEL name=ashutoshh
+LABEL email=ashutoshh@gmail.com
+# optional field but you can write image owner details
+RUN yum  install python3 -y 
+RUN mkdir /mycode 
+# is used to run any command inside the image while building
+COPY ashu.py /mycode/ashu.py 
+# copy code inside docker image while image buidling time 
+CMD ["python3","/mycode/ashu.py"]
+# to let container know how to run code while container is getting created 
+# for the first time 
+# is fix the default process of container 
+```
+
+### lets build image 
+
+```
+[ashu@docker-host ashu-app-images]$ cd  python-code/
+[ashu@docker-host python-code]$ ls
+ashunew.dockerfile  ashu.py  Dockerfile
+[ashu@docker-host python-code]$ docker build -t  ashupy:2.1  -f  ashunew.dockerfile  .  
+Sending build context to Docker daemon   5.12kB
+Step 1/7 : FROM oraclelinux:8.5
+8.5: Pulling from library/oraclelinux
+42405d186b2e: Pull complete 
+Digest: sha256:cda8334297e86456c96986b4070891ed58f56151e8ae2e500d9e13b1d743b2c6
+Status: Downloaded newer image for oraclelinux:8.5
+ ---> bbfaaa4ae074
+Step 2/7 : LABEL name=ashutoshh
+ ---> Running in 1d66a8b52e13
+Removing intermediate container 1d66a8b52e13
+ ---> ced91e4f32f6
+Step 3/7 : LABEL email=ashutoshh@gmail.com
+ ---> Running in cb52d1dcdbe1
+Removing intermediate container cb52d1dcdbe1
+ ---> c50a69bba97b
+```
+
 
 
 
