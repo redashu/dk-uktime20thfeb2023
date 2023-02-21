@@ -173,6 +173,47 @@ Removing intermediate container cb52d1dcdbe1
  ---> c50a69bba97b
 ```
 
+### docker image sharing using registry 
+
+<img src="reg.png">
+
+## More info about Docker hub 
+
+<img src="dh1.png">
+
+### Docker hub image name 
+
+<img src="name.png">
+
+### pushing image to docker hub 
+
+```
+[ashu@docker-host ashu-app-images]$ docker  images  |  grep ashu
+ashupy               2.1              fce707ac27b8   28 minutes ago      454MB
+ashupy               2.11             fce707ac27b8   28 minutes ago      454MB
+ashupy               1.2gmailupdate   6fb1e2cfc106   43 minutes ago      925MB
+ashupy               1.2              d64d5203ff8a   44 minutes ago      925MB
+ashupy               1.1              fdf624196e69   About an hour ago   925MB
+[ashu@docker-host ashu-app-images]$ 
+[ashu@docker-host ashu-app-images]$ 
+[ashu@docker-host ashu-app-images]$ docker  tag  ashupy:2.1    docker.io/dockerashu/ashupy:2.1 
+[ashu@docker-host ashu-app-images]$ docker login -u dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-host ashu-app-images]$ docker push  docker.io/dockerashu/ashupy:2.1 
+The push refers to repository [docker.io/dockerashu/ashupy]
+50ff338be3ce: Pushed 
+b881cfa33be8: Pushed 
+b75ec7373c2a: Pushing [==========>                                        ]  45.37MB/218.6MB
+6b0a47b1ff96: Mounted from library/oraclelinux 
+
+
+
+```
 
 
 
