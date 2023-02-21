@@ -10,5 +10,11 @@
 
 <img src="b2.png">
 
+### vscode setup 
+
+<img src="vscode.png">
+
+
+
 
 
