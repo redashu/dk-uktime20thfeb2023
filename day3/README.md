@@ -81,5 +81,89 @@ d426fda5ae6b87c251e79850bae57cc60d0dead093b4f255af40bdf6323be9d1
 
 ```
 
+## Docker container networking 
+
+### creating a docker image for sample webappge hosting 
+
+### Understanding web servers 
+
+<img src="web.png">
+
+### sample html code in ashu.html
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ashu-webui</title>
+</head>
+<body>
+    <h1> this is my first web page </h1>
+    <h2> heading of webpage </h2>
+    
+</body>
+</html>
+```
+
+### Dockerfile 
+
+```
+FROM nginx
+# using image from docker hub 
+LABEL   name=ashutoshh
+LABEL   email=ashutoshh@linux.com
+LABEL   team=mobi-dev
+# all labels are optional 
+#COPY ashu.html /usr/share/nginx/html/
+ADD ashu.html /usr/share/nginx/html/
+# COPY and ADD both are same but add can use URL as source 
+# if we don't provide CMD in Dockerfile then -- base image CMD will be 
+# inherited  
+```
+
+### lets build it 
+
+```
+[ashu@docker-host ashu-app-images]$ ls
+java-code  python-code  webapp
+[ashu@docker-host ashu-app-images]$ ls webapp/
+ashu.html  Dockerfile
+[ashu@docker-host ashu-app-images]$ docker build -t ashu-webui:v1  webapp/ 
+Sending build context to Docker daemon  3.072kB
+Step 1/5 : FROM nginx
+ ---> 3f8a00f137a0
+Step 2/5 : LABEL   name=ashutoshh
+ ---> Running in c2c0bcd28383
+Removing intermediate container c2c0bcd28383
+ ---> a35f5ff909e7
+Step 3/5 : LABEL   email=ashutoshh@linux.com
+ ---> Running in e8967ff1b82e
+Removing intermediate container e8967ff1b82e
+ ---> 8be7864b7e5e
+Step 4/5 : LABEL   team=mobi-dev
+ ---> Running in 90e25bfa338d
+Removing intermediate container 90e25bfa338d
+ ---> 7bd319c6daa4
+Step 5/5 : ADD ashu.html /usr/share/nginx/html/
+ ---> 305540e8a62f
+Successfully built 305540e8a62f
+Successfully tagged ashu-webui:v1
+```
+
+### 
+
+```
+[ashu@docker-host ashu-app-images]$ docker images  |  grep ashu
+ashu-webui                         v1               305540e8a62f   14 seconds ago   142MB
+dockerashu/ashupy                  2.1              fce707ac27b8   24 hours ago     454MB
+ashupy                             2.1              fce707ac27b8   24 hours ago     454MB
+ashupy                             2.11             fce707ac27b8   24 hours ago     454MB
+ashupy                             1.2gmailupdate   6fb1e2cfc106   24 hours ago     925MB
+ashupy                             1.2              d64d5203ff8a   24 hours ago     925MB
+```
+
 
 
