@@ -165,5 +165,134 @@ ashupy                             1.2gmailupdate   6fb1e2cfc106   24 hours ago 
 ashupy                             1.2              d64d5203ff8a   24 hours ago     925MB
 ```
 
+### Container Networking Models
+
+<img src="cnm.png">
+
+### default docker network bridges
+
+```
+[ashu@docker-host ashu-app-images]$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+b517c505d7eb   bridge    bridge    local
+3372299e537a   host      host      local
+dbfa091ea6fa   none      null      local
+[ashu@docker-host ashu-app-images]$ 
+
+```
+
+### exploring bridge 
+
+```
+[ashu@docker-host ashu-app-images]$ docker  inspect  bridge
+[
+    {
+        "Name": "bridge",
+        "Id": "b517c505d7eb84d5439060b40341ad20ee66dbea469fa9424521de35855d05eb",
+        "Created": "2023-02-22T07:56:58.328969539Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+]
+
+```
+
+### creating container 
+
+```
+ashu@docker-host ashu-app-images]$ docker images |  grep ashu
+ashu-webui                         v1               305540e8a62f   35 minutes ago   142MB
+dockerashu/ashupy                  2.1              fce707ac27b8   24 hours ago     454MB
+ashupy                             2.1              fce707ac27b8   24 hours ago     454MB
+ashupy                             2.11             fce707ac27b8   24 hours ago     454MB
+ashupy                             1.2gmailupdate   6fb1e2cfc106   25 hours ago     925MB
+ashupy                             1.2              d64d5203ff8a   25 hours ago     925MB
+ashupy                             1.1              fdf624196e69   25 hours ago     925MB
+[ashu@docker-host ashu-app-images]$ docker run -d --name ashuwebc1  ashu-webui:v1  
+7ccc94e4e5ff95fb18d7992a1d44ec546cbbd0de525b723a63b4f18aecdd054f
+[ashu@docker-host ashu-app-images]$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
+7ccc94e4e5ff   ashu-webui:v1   "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   80/tcp    ashuwebc1
+[ashu@docker-host ashu-app-images]$ 
+
+```
+
+### Docker NEtworking NAT 
+
+<img src="nat.png">
+### verify internet access 
+
+```
+[ashu@docker-host ashu-app-images]$ docker  exec -it ashuwebc1 bash 
+root@7ccc94e4e5ff:/# 
+root@7ccc94e4e5ff:/# cat /etc/os
+cat: /etc/os: No such file or directory
+root@7ccc94e4e5ff:/# cat /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+root@7ccc94e4e5ff:/# apt update 
+Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
+Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [48.4 kB]
+Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.1 kB]
+Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8183 kB]
+Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [228 kB]
+Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [14.6 kB]                                                                             
+Fetched 8634 kB in 7s (1231 kB/s)                                                                                                                             
+Reading package lists... Done
+```
+
+### to expose container applicaiton we can do port forwarding 
+
+<img src="portf.png">
+
+
+###
+
+```
+[ashu@docker-host ashu-app-images]$ docker run -d --name ashuwebc2 -p 1234:80  ashu-webui:v1 
+59ea9a7741440f77969dd7aa26d096facf4f9eb903175a64c6ebd2e03d822898
+[ashu@docker-host ashu-app-images]$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+59ea9a774144   ashu-webui:v1   "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   0.0.0.0:1234->80/tcp, :::1234->80/tcp   ashuwebc2
+[ashu@docker-host ashu-app-images]$ 
+
+
+```
+
 
 
