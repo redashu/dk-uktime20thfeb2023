@@ -294,5 +294,16 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS  
 
 ```
 
+### sample dockerfile 
+
+```
+FROM nginx 
+LABEL   name=ashutoshh
+RUN apt update && apt install git -y 
+workdir /opt/
+RUN git clone https://github.com/schoolofdevops/html-sample-app.git 
+RUN cp -rf html-sample-app/* /usr/share/nginx/html/
+```
+
 
 
