@@ -455,6 +455,36 @@ ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui  
 [ashu@docker-client-machine ashu-compose]$ 
 ```
 
+## Docker compose 
+
+```
+[ashu@docker-client-machine ashu-compose]$ docker-compose up -d --build 
+[+] Building 0.5s (9/9) FINISHED                                                                                
+ => [internal] load build definition from alpine.dockerfile                                                0.0s
+ => => transferring dockerfile: 39B                                                                        0.0s
+ => [internal] load .dockerignore                                                                          0.0s
+ => => transferring context: 2B                                                                            0.0s
+ => [internal] load metadata for docker.io/library/alpine:latest                                           0.0s
+ => https://raw.githubusercontent.com/redashu/pythonLang/main/while.py                                     0.4s
+ => [1/4] FROM docker.io/library/alpine                                                                    0.0s
+ => CACHED [2/4] RUN apk update && apk add python3                                                         0.0s
+ => CACHED [3/4] RUN mkdir /pycodes                                                                        0.0s
+ => CACHED [4/4] ADD https://raw.githubusercontent.com/redashu/pythonLang/main/while.py /pycodes/          0.0s
+ => exporting to image                                                                                     0.0s
+ => => exporting layers                                                                                    0.0s
+ => => writing image sha256:c1b9fa9bfb4e2555828a1321c42efe33035e3febb7240941bfa9a97398e21711               0.0s
+ => => naming to docker.io/library/ashualp:pycodev1                                                        0.0s
+[+] Running 3/3
+ ⠿ Network ashu-compose_default  Created                                                                   0.0s
+ ⠿ Container ashuc1              Started                                                                   0.8s
+ ⠿ Container ashuc2              Started                                                                   1.0s
+[ashu@docker-client-machine ashu-compose]$ docker-compose  ps
+NAME                IMAGE               COMMAND                  SERVICE             CREATED             STATUS              PORTS
+ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui         7 seconds ago       Up 5 seconds        0.0.0.0:1299->80/tcp, :::1299->80/tcp
+ashuc2              ashualp:pycodev1    "/bin/sh -c 'python3…"   ashu-python-app     7 seconds ago       Up 5 seconds        
+[ashu@docker-client-machine ashu-compose]$ 
+```
+
 
 
 
