@@ -280,6 +280,96 @@ Removed symlink /etc/systemd/system/multi-user.target.wants/docker.service.
 [root@docker-client-machine ~]# systemctl stop  docker.socket 
 ```
 
+### installing and configuring docker server 
+
+```
+[root@docker-server ~]# history 
+    1  hostnamectl set-hostname docker-server
+    2  docker
+    3  yum install docker -y
+    4  history 
+[root@docker-server ~]# cd  /etc/sysconfig/
+[root@docker-server sysconfig]# ls
+acpid       clock     docker          irqbalance  netconsole       raid-check     rpcbind    selinux
+atd         console   docker-storage  keyboard    network          rdisc          rsyncd     sshd
+authconfig  cpupower  i18n            man-db      network-scripts  readonly-root  rsyslog    sysstat
+chronyd     crond     init            modules     nfs              rpc-rquotad    run-parts  sysstat.ioconf
+[root@docker-server sysconfig]# vim docker
+[root@docker-server sysconfig]# 
+[root@docker-server sysconfig]# cat docker
+# The max number of open files for the daemon itself, and all
+# running containers.  The default value of 1048576 mirrors the value
+# used by the systemd service unit.
+DAEMON_MAXFILES=1048576
+
+# Additional startup options for the Docker daemon, for example:
+# OPTIONS="--ip-forward=true --iptables=true"
+# By default we limit the number of open files per container
+OPTIONS="--default-ulimit nofile=32768:65536  -H tcp://172.31.43.41:2375"
+
+# How many seconds the sysvinit script waits for the pidfile to appear
+# when starting the daemon.
+DAEMON_PIDFILE_TIMEOUT=10
+
+```
+
+### starting docker service 
+
+```
+[root@docker-server sysconfig]# systemctl start docker 
+[root@docker-server sysconfig]# systemctl status docker 
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)
+   Active: active (running) since Thu 2023-02-23 09:54:10 UTC; 7s ago
+     Docs: https://docs.docker.com
+  Process: 3721 ExecStartPre=/usr/libexec/docker/docker-setup-runtimes.sh (code=exited, status=0/SUCCESS)
+  Process: 3719 ExecStartPre=/bin/mkdir -p /run/docker (code=exited, status=0/SUCCESS)
+ Main PID: 3724 (dockerd)
+```
+
+### from docker client machine we can send request to docker server 
+
+### method 1
+
+```
+[ashu@docker-client-machine ashu-app-images]$ docker -H  tcp://172.31.43.41:2375   network ls 
+NETWORK ID     NAME      DRIVER    SCOPE
+4ff441604725   bridge    bridge    local
+4fa0cd8b9029   host      host      local
+300dcde93a24   none      null      local
+[ashu@docker-client-machine ashu-app-images]$ 
+[ashu@docker-client-machine ashu-app-images]$ docker -H  tcp://172.31.43.41:2375   images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[ashu@docker-client-machine ashu-app-images]$ 
+```
+
+### method 2
+
+```
+[ashu@docker-client-machine ashu-app-images]$ docker  context  create  remote-server  --docker host="tcp://172.31.43.41:2375"
+remote-server
+Successfully created context "remote-server"
+[ashu@docker-client-machine ashu-app-images]$ 
+[ashu@docker-client-machine ashu-app-images]$ docker  context  ls
+NAME            DESCRIPTION                               DOCKER ENDPOINT               KUBERNETES ENDPOINT   ORCHESTRATOR
+default *       Current DOCKER_HOST based configuration   unix:///var/run/docker.sock                         swarm
+remote-server                                             tcp://172.31.43.41:2375                             
+[ashu@docker-client-machine ashu-app-images]$ 
+[ashu@docker-client-machine ashu-app-images]$ docker images
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+[ashu@docker-client-machine ashu-app-images]$ 
+[ashu@docker-client-machine ashu-app-images]$ docker  context  use  remote-server 
+remote-server
+Current context is now "remote-server"
+[ashu@docker-client-machine ashu-app-images]$ docker  context  ls
+NAME              DESCRIPTION                               DOCKER ENDPOINT               KUBERNETES ENDPOINT   ORCHESTRATOR
+default           Current DOCKER_HOST based configuration   unix:///var/run/docker.sock                         swarm
+remote-server *                                             tcp://172.31.43.41:2375                             
+[ashu@docker-client-machine ashu-app-images]$ docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[ashu@docker-client-machine ashu-app-images]$ 
+```
+
 
 
 
