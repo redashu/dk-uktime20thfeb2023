@@ -253,5 +253,16 @@ round-trip min/avg/max = 0.089/0.100/0.111 ms
 / # 
 ```
 
+### disconnect
+
+```
+[ashu@docker-host ashu-app-images]$ docker network disconnect  ashubr2  ashuc1 
+[ashu@docker-host ashu-app-images]$ 
+[ashu@docker-host ashu-app-images]$ docker  exec -it  ashuc1  sh 
+/ # ping ashuc4
+ping: bad address 'ashuc4'
+/ # 
+```
+
 
 
