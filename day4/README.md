@@ -432,6 +432,30 @@ ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui  
 [ashu@docker-client-machine ashu-compose]$
 ```
 
+### more docker-compose commands 
+
+```
+[ashu@docker-client-machine ashu-compose]$ docker-compose  ps
+NAME                IMAGE               COMMAND                  SERVICE             CREATED             STATUS              PORTS
+ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui         8 minutes ago       Up 8 minutes        0.0.0.0:1234->80/tcp, :::1234->80/tcp
+[ashu@docker-client-machine ashu-compose]$ docker-compose  stop 
+[+] Running 1/1
+ ⠿ Container ashuc1  Stopped                                                                                                                              0.2s
+[ashu@docker-client-machine ashu-compose]$ docker-compose  ps -a
+NAME                IMAGE               COMMAND                  SERVICE             CREATED             STATUS                     PORTS
+ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui         8 minutes ago       Exited (0) 4 seconds ago   
+[ashu@docker-client-machine ashu-compose]$ 
+[ashu@docker-client-machine ashu-compose]$ docker-compose  start 
+[+] Running 1/1
+ ⠿ Container ashuc1  Started                                                                                                                              0.5s
+[ashu@docker-client-machine ashu-compose]$ docker-compose  down 
+[+] Running 2/1
+ ⠿ Container ashuc1              Removed                                                                                                                  0.2s
+ ⠿ Network ashu-compose_default  Removed                                                                                                                  0.1s
+[ashu@docker-client-machine ashu-compose]$ 
+```
+
+
 
 
 
