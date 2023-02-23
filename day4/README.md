@@ -370,6 +370,68 @@ REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
 [ashu@docker-client-machine ashu-app-images]$ 
 ```
 
+### Installing docker-compose on docker-client machien 
+
+```
+[root@docker-client-machine ~]# curl -SL https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-linux-x86_64 -o /usr/bin/docker-compose 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 45.4M  100 45.4M    0     0  4799k      0  0:00:09  0:00:09 --:--:-- 5169k
+[root@docker-client-machine ~]# 
+[root@docker-client-machine ~]# 
+[root@docker-client-machine ~]# chmod +x /usr/bin/docker-compose 
+[root@docker-client-machine ~]# 
+[root@docker-client-machine ~]# docker-compose  version
+Docker Compose version v2.16.0
+[root@docker-client-machine ~]# 
+
+
+
+```
+
+### more info about docker-compose 
+
+<img src="compose.png">
+
+### compose example 1 
+
+```
+version:  '3.8' # compose file version 
+services:
+  ashu-app-ui: # name of service 
+    image: nginx:1.12 # image from docker hub if not present local on docker server
+    container_name: ashuc1 # name of container  
+    ports: # port mapping 
+    - 1234:80 
+```
+
+### lets run it 
+
+```
+[ashu@docker-client-machine ashu-app-images]$ ls
+java-code  python-code  webapp
+[ashu@docker-client-machine ashu-app-images]$ mkdir ashu-compose
+[ashu@docker-client-machine ashu-app-images]$ ls
+ashu-compose  java-code  python-code  webapp
+[ashu@docker-client-machine ashu-app-images]$ cd  ashu-compose/
+[ashu@docker-client-machine ashu-compose]$ ls
+docker-compose.yaml
+[ashu@docker-client-machine ashu-compose]$ docker-compose up -d
+[+] Running 4/4
+ ⠿ ashu-app-ui Pulled                                                                                                                                     5.8s
+   ⠿ f2aa67a397c4 Pull complete                                                                                                                           2.1s
+   ⠿ e3eaf3d87fe0 Pull complete                                                                                                                           2.8s
+   ⠿ 38cb13c1e4c9 Pull complete                                                                                                                           2.8s
+[+] Running 2/2
+ ⠿ Network ashu-compose_default  Created                                                                                                                  0.0s
+ ⠿ Container ashuc1              Started                                                                                                                  0.9s
+[ashu@docker-client-machine ashu-compose]$ docker-compose ps
+NAME                IMAGE               COMMAND                  SERVICE             CREATED             STATUS              PORTS
+ashuc1              nginx:1.12          "nginx -g 'daemon of…"   ashu-app-ui         13 seconds ago      Up 12 seconds       0.0.0.0:1234->80/tcp, :::1234->80/tcp
+[ashu@docker-client-machine ashu-compose]$
+```
+
 
 
 
