@@ -152,4 +152,106 @@ ping: bad address 'abdoc2'
 [ashu@docker-host ashu-app-images]$ docker network create  ashubr2  --subnet  192.168.100.0/24  --gateway 192.168.100.1 
 ```
 
+### creating container network with details 
+
+```
+[ashu@docker-host ashu-app-images]$ docker network create ashubr1
+fc2963a9935259c30d912ec74a0542ce780cae867ef8ca229dc6d0a7b2749bc5
+[ashu@docker-host ashu-app-images]$ docker network create ashubr2 --subnet 192.168.179.0/24  --gateway  192.168.179.1 
+242d44c6f461c0fa5595fd9968fe6282b24ef2a4e5b771b73c33fa7054eb8d0c
+[ashu@docker-host ashu-app-images]$ 
+[ashu@docker-host ashu-app-images]$ docker run -itd --name ashuc1 --network ashubr1  alpine sleep 1000
+c89ce796c1afefa13ce920a222eb8b2733c33b75eaf7e66da12a3897edb8174f
+[ashu@docker-host ashu-app-images]$ docker run -itd --name ashuc2 --network ashubr1  alpine sleep 1000
+6db59091bb30b17d672a302bc2034348de061ed6fa218616dae9cccb42b5f867
+[ashu@docker-host ashu-app-images]$ 
+[ashu@docker-host ashu-app-images]$ docker run -itd --name ashuc3 --network ashubr2  alpine sleep 1000
+71c7473796f57465d30928fbc2897b4a2fb1e46afb57b5d78aa12d7b972d4926
+[ashu@docker-host ashu-app-images]$ docker run -itd --name ashuc4 --network ashubr2 --ip 192.168.179.200  alpine sleep 1000
+2bc6e7e84986cd523725b19d258dc0a8fdf73274edbd64c3405a5e61d8e29a8b
+[ashu@docker-host ashu-app-images]$ docker  exec -it  ashuc4  sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:B3:C8  
+          inet addr:192.168.179.200  Bcast:192.168.179.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:7 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:570 (570.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # exit
+[ashu@docker-host ashu-app-images]$ 
+```
+
+### adding multiple interface to the network container 
+
+```
+[ashu@docker-host ashu-app-images]$ docker  exec -it  ashuc1  sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:50:02  
+          inet addr:192.168.80.2  Bcast:192.168.95.255  Mask:255.255.240.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:24 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:2120 (2.0 KiB)  TX bytes:530 (530.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:12 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:12 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:946 (946.0 B)  TX bytes:946 (946.0 B)
+
+/ # 
+[ashu@docker-host ashu-app-images]$ docker network connect  ashubr2  ashuc1 
+[ashu@docker-host ashu-app-images]$ docker  exec -it  ashuc1  sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:50:02  
+          inet addr:192.168.80.2  Bcast:192.168.95.255  Mask:255.255.240.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:24 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:2120 (2.0 KiB)  TX bytes:530 (530.0 B)
+
+eth1      Link encap:Ethernet  HWaddr 02:42:C0:A8:B3:03  
+          inet addr:192.168.179.3  Bcast:192.168.179.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:6 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:500 (500.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:12 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:12 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:946 (946.0 B)  TX bytes:946 (946.0 B)
+
+/ # 
+[ashu@docker-host ashu-app-images]$ docker  exec -it  ashuc1  sh 
+/ # ping ashuc4
+PING ashuc4 (192.168.179.200): 56 data bytes
+64 bytes from 192.168.179.200: seq=0 ttl=64 time=0.111 ms
+64 bytes from 192.168.179.200: seq=1 ttl=64 time=0.089 ms
+^C
+--- ashuc4 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.089/0.100/0.111 ms
+/ # 
+```
+
+
 
