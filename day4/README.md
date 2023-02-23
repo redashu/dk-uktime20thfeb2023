@@ -264,5 +264,24 @@ ping: bad address 'ashuc4'
 / # 
 ```
 
+### Docker client options 
+
+<img src="client.png">
+
+### stopping docker service to act this machine as docker client 
+
+```
+[root@docker-client-machine ~]# systemctl stop docker 
+Warning: Stopping docker.service, but it can still be activated by:
+  docker.socket
+[root@docker-client-machine ~]# systemctl disable docker 
+Removed symlink /etc/systemd/system/multi-user.target.wants/docker.service.
+[root@docker-client-machine ~]# systemctl disable docker.socket 
+[root@docker-client-machine ~]# systemctl stop  docker.socket 
+```
+
+
+
+
 
 
