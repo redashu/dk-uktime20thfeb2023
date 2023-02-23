@@ -146,4 +146,10 @@ ping: bad address 'abdoc2'
 [ashu@docker-host ashu-app-images]$ 
 ```
 
+### creating specific subnet network bridge 
+
+```
+[ashu@docker-host ashu-app-images]$ docker network create  ashubr2  --subnet  192.168.100.0/24  --gateway 192.168.100.1 
+```
+
 
