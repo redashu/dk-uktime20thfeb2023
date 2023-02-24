@@ -116,3 +116,11 @@ services: # to deal with services
 
 ```
 
+### checking it
+
+```
+402  docker-compose  -f customer.yaml  up -d --build 
+  403  docker-compose  -f customer.yaml  ps
+```
+
+
