@@ -243,5 +243,21 @@ COPY --from=ashu-app-builder /newcode/target/WebApp.war /usr/local/tomcat/webapp
   448  docker run -itd --name ashujc1 -p 1166:8080 ashufinal:v1 
 ```
 
+### UI of docker using portainer 
+
+```
+[ashu@docker-client-machine ~]$ docker run -itd --name webui -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock  portainer/portainer 
+Unable to find image 'portainer/portainer:latest' locally
+latest: Pulling from portainer/portainer
+772227786281: Pull complete 
+96fd13befc87: Pull complete 
+0bad1d247b5b: Extracting [===>                                               ]  6.128MB/86.68MB
+b5d1b01b1d39: Download complete 
+
+
+
+```
+
+
 
 
