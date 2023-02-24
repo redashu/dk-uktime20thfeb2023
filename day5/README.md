@@ -153,5 +153,95 @@ services: # to deal with services
     - ashubr001 
 ```
 
+### java code 
+
+```
+class ashu { 
+    public static void main(String args[]) 
+    { 
+        // test expression 
+        while (true) { 
+            System.out.println("Hello World"); 
+            try {
+                Thread.sleep(2000);
+            } catch (Exception ex) {
+                // Ignored
+            }
+  
+            // update expression 
+        } 
+    } 
+} 
+```
+
+
+### Dockerfile 
+
+```
+FROM openjdk
+LABEL name=ashutoshh
+RUN mkdir /code
+COPY ashu.java /code/
+WORKDIR /code
+RUN javac ashu.java 
+# above step for compiling 
+CMD ["java","ashu"]
+```
+
+### building image 
+
+```
+422  docker build -t ashujava:v1 . 
+  423  history 
+  424  docker run -itd --name ashut1 ashujava:v1 
+  425  docker ps
+  426  docker logs  ashut1 
+```
+
+### java spring boot webapp
+
+```
+[ashu@docker-client-machine ashu-app-images]$ mkdir  ashu-java-spring
+[ashu@docker-client-machine ashu-app-images]$ ls
+ashu-compose  ashu-customer  ashu-java-spring  java-code  python-code  webapp
+[ashu@docker-client-machine ashu-app-images]$ cd ashu-java-spring/
+[ashu@docker-client-machine ashu-java-spring]$ git clone https://github.com/redashu/java-springboot.git
+Cloning into 'java-springboot'...
+remote: Enumerating objects: 23, done.
+remote: Counting objects: 100% (23/23), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 23 (delta 4), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (23/23), 5.62 KiB | 5.62 MiB/s, done.
+Resolving deltas: 100% (4/4), done.
+[ashu@docker-client-machine ashu-java-spring]$ ls
+java-springboot
+[ashu@docker-client-machine ashu-java-spring]$ 
+
+```
+### Multi-stage Dockerfile 
+
+```
+FROM oraclelinux:8.4 as ashu-app-builder 
+LABEL   name=ashutoshh
+RUN yum install maven java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64  -y 
+RUN mkdir /newcode 
+ADD java-springboot /newcode/
+WORKDIR /newcode
+RUN mvn clean package
+# it will build spring boot app --.war file  /newcode/target/WebApp.war 
+FROM tomcat 
+LABEL email=ashutoshh@linux.com 
+COPY --from=ashu-app-builder /newcode/target/WebApp.war /usr/local/tomcat/webapps/
+
+```
+
+### lets build and create 
+
+```
+446  docker build -t  ashufinal:v1 .
+  447  history 
+  448  docker run -itd --name ashujc1 -p 1166:8080 ashufinal:v1 
+```
+
 
 
