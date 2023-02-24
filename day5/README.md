@@ -123,4 +123,35 @@ services: # to deal with services
   403  docker-compose  -f customer.yaml  ps
 ```
 
+### using build and compose 
+
+```
+version:  '3.8'
+networks: # creating custom bridge 
+  ashubr001: # name of bridge 
+services: # to deal with services 
+  ashu-customer-app:
+    image: ashu-customer:appv1 
+    build: # to build image 
+      context: . # location of dockerfile 
+      dockerfile: Dockerfile # name of dockerfile
+    container_name: ashuc-ui2 
+    environment: # passing Env variable and its value 
+      deploy: "ui2"
+    networks: # to use network we created above
+    - ashubr001 # name of netowrk 
+    ports:
+    - 1234:80 
+  ashu-customer-app2:
+    image: ashu-customer:appv1
+    container_name: ashu-ui3
+    environment:
+      deploy: "ui3"
+    ports:
+    - 1188:80 
+    networks:
+    - ashubr001 
+```
+
+
 
