@@ -38,12 +38,12 @@ then
     cp -rf /apps/app1/*  /var/www/html/
     httpd -DFOREGROUND 
 
-elfi [  "$deploy" == "ui2" ]
+elif  [  "$deploy" == "ui2" ]
 then
     cp -rf  /apps/app2/*  /var/www/html/
     httpd -DFOREGROUND
     
-elfi [  "$deploy" == "ui3" ]
+elif  [  "$deploy" == "ui3" ]
 then
     cp -rf  /apps/app3/*  /var/www/html/
     httpd -DFOREGROUND
