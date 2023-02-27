@@ -210,4 +210,84 @@ rjamaro-pod123   1/1     Running   0          6m50s
 [ashu@ip-172-31-29-207 k8s-app-deploy]$ 
 ```
 
+### auto generate YAML file 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashupod1.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  run  ashu-pod002  --image=docker.io/dockerashu/ashu-ui:mobiv1  --port 80 --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashu-pod002
+  name: ashu-pod002
+spec:
+  containers:
+  - image: docker.io/dockerashu/ashu-ui:mobiv1
+    name: ashu-pod002
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  run  ashu-pod002  --image=docker.io/dockerashu/ashu-ui:mobiv1  --port 80 --dry-run=client -o yaml >newpod.yaml 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashupod1.yaml  newpod.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$
+```
+
+### deploy it 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashupod1.yaml  newpod.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl create  -f  newpod.yaml  
+pod/ashu-pod002 created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  pods
+NAME             READY   STATUS    RESTARTS   AGE
+ashu-pod002      1/1     Running   0          2s
+rjamaro-pod123
+```
+
+## some more pod commands
+
+###logs
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   logs  ashu-pod002 
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2023/02/27 11:41:00 [notice] 1#1: using the "epoll" event method
+2023/02/27 11:41:00 [notice] 1#1: nginx/1.23.3
+2023/02/27 11:41:00 [notice] 1#1: built by gcc 10.2.1 20210110 (Debian 10.2.1-6) 
+2023/02/27 11:41:00 [notice] 1#1: OS: Linux 5.10.162-141.675.amzn2.x86_64
+2023/02/27 11:41:00 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 32768:65536
+```
+
+### inside pod accessing container shell
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   exec -it  ashu-pod002  -- bash 
+root@ashu-pod002:/# 
+root@ashu-pod002:/# 
+root@ashu-pod002:/# ls 
+bin   dev                  docker-entrypoint.sh  home  lib64  mnt  proc  run   srv  tmp  var
+boot  docker-entrypoint.d  etc                   lib   media  opt  root  sbin  sys  usr
+root@ashu-pod002:/# ip a
+bash: ip: command not found
+root@ashu-pod002:/# exit
+exit
+command terminated with exit code 127
+```
+
+
 
