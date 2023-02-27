@@ -89,7 +89,42 @@ etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yam
 
 ```
 
+### sending request to api server 
 
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  cluster-info --kubeconfig  admin.conf 
+Kubernetes control plane is running at https://172.31.81.217:6443
+CoreDNS is running at https://172.31.81.217:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  get  nodes   --kubeconfig  admin.conf 
+NAME            STATUS   ROLES                  AGE   VERSION
+control-plane   Ready    control-plane,master   13d   v1.23.16
+node1           Ready    <none>                 13d   v1.23.16
+node3           Ready    <none>                 13d   v1.23.16
+```
+
+### copy/moving file to right location 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ mv admin.conf  ~/.kube/config 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  get  nodes
+NAME            STATUS   ROLES                  AGE   VERSION
+control-plane   Ready    control-plane,master   13d   v1.23.16
+node1           Ready    <none>                 13d   v1.23.16
+node3           Ready    <none>                 13d   v1.23.16
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  cluster-info 
+Kubernetes control plane is running at https://172.31.81.217:6443
+CoreDNS is running at https://172.31.81.217:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+
+```
 
 
 
