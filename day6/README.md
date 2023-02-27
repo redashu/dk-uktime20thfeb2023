@@ -68,4 +68,28 @@ Kustomize Version: v4.5.7
 
 <img src="etcd.png">
 
+### OPtions for installing / setup  k8s cluster 
+
+<img src="setup.png">
+
+### k8s master node auth file is admin.conf 
+
+```
+[root@control-plane ~]# cd  /etc/kubernetes/
+[root@control-plane kubernetes]# l
+-bash: l: command not found
+[root@control-plane kubernetes]# ls
+admin.conf  controller-manager.conf  kubelet.conf  manifests  pki  scheduler.conf
+[root@control-plane kubernetes]# 
+[root@control-plane kubernetes]# cd  manifests/
+[root@control-plane manifests]# ls
+etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+[root@control-plane manifests]# 
+
+
+```
+
+
+
+
 
