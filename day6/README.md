@@ -58,4 +58,14 @@ Kustomize Version: v4.5.7
 [ashu@docker-k8s-client 
 ```
 
+## Understanding internal architecture of k8s -- control plane 
+
+### api-server in control plane 
+
+<img src="apis.png">
+
+### Etcd on control 
+
+<img src="etcd.png">
+
 
