@@ -150,5 +150,64 @@ spec: # more info about Pod components
 ```
 
 
+### lets deploy pod file 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  nodes
+NAME            STATUS   ROLES                  AGE   VERSION
+control-plane   Ready    control-plane,master   13d   v1.23.16
+node1           Ready    <none>                 13d   v1.23.16
+node3           Ready    <none>                 13d   v1.23.16
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods
+No resources found in default namespace.
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashupod1.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create  -f  ashupod1.yaml 
+pod/ashu-pod123 created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods
+NAME          READY   STATUS    RESTARTS   AGE
+ashu-pod123   1/1     Running   0          11s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods -o wide
+NAME          READY   STATUS    RESTARTS   AGE   IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-pod123   1/1     Running   0          16s   192.168.166.148   node1   <none>           <none>
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+
+```
+
+### sending delete request to pod 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashupod1.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl delete -f  ashupod1.yaml 
+pod "ashu-pod123" deleted
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods
+NAME                  READY   STATUS    RESTARTS   AGE
+hhalkhazragy-pod123   1/1     Running   0          6m5s
+ihor-pod123           1/1     Running   0          5m41s
+mfarag-pod123         1/1     Running   0          5m19s
+rjamaro-pod123        1/1     Running   0          4m54s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+
+```
+
+### deletion
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  pods
+NAME             READY   STATUS    RESTARTS   AGE
+ihor-pod123      1/1     Running   0          7m25s
+mfarag-pod123    1/1     Running   0          7m3s
+rjamaro-pod123   1/1     Running   0          6m38s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  delete pods ihor-pod123 
+pod "ihor-pod123" deleted
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods
+NAME             READY   STATUS    RESTARTS   AGE
+mfarag-pod123    1/1     Running   0          7m15s
+rjamaro-pod123   1/1     Running   0          6m50s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+```
 
 
