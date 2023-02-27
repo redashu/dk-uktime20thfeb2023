@@ -126,5 +126,29 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 ```
 
+### Introduction to Pod 
+
+<img src="pod.png">
+
+### Pod can have more than one containers 
+
+<img src="cont1.png">
+
+### First sample Pod YAML file 
+
+```
+apiVersion: v1 # apiVersion for sending request 
+kind: Pod # related to Pod 
+metadata: # name of kind 
+  name: ashu-pod123 # name of pod 
+spec: # more info about Pod components 
+  containers:
+  - name: ashuc1 # name of contianer 
+    image: docker.io/dockerashu/ashu-ui:mobiv1 # image from Dockerhub  
+    ports:
+    - containerPort: 80  # port of application container 
+```
+
+
 
 
