@@ -170,5 +170,129 @@ mfarag-lb1         NodePort    10.102.130.53    <none>        2244:31134/TCP   2
 NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
 ashu-lb1   NodePort   10.98.93.122   <none>        1234:30235/TCP   24s   run=ashu-pod002
 ```
+### network traffic work flow 
+
+<img src="flow.png">
+
+### INtroduction to controller in k8s 
+
+<img src="cont.png">
+
+### COntrollers 
+
+<img src="cont2.png">
+
+### lets start using deployment controller to deploy image in k8s 
+
+<img src="deploy.png">
+
+### remove everything 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  delete  pod  ashu-pod002 
+pod "ashu-pod002" deleted
+
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  delete service ashu-lb1  
+service "ashu-lb1" deleted
+```
+
+### creating deployment yaml for some docker image 
+
+```
+kubectl  create  deployment  ashu-app   --image=docker.io/library/adminer:latest   --port 8080 --dry-run=client -o yaml >ashu_deployment.yaml 
+```
+
+### YAML of deployment 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-app
+  name: ashu-app # name of deployment 
+spec:
+  replicas: 1 # number of pods we want 
+  selector:
+    matchLabels:
+      app: ashu-app
+  strategy: {}
+  template: # deployment will be using template to create pods 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-app
+    spec:
+      containers:
+      - image: docker.io/library/adminer:latest
+        name: adminer
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+
+```
+
+### lets deploy 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl create  -f  ashu_deployment.yaml 
+deployment.apps/ashu-app created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deployment 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+amr-app    0/1     1            0           6s
+ashu-app   0/1     1            0           9s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  pods
+NAME                       READY   STATUS              RESTARTS   AGE
+amr-app-748c4b4569-pg5gc   1/1     Running             0          15s
+ashu-app-684dc44c4-wb7td   1/1     Running             0          18s
+ihor-app-76d7c6bcc-clnqq   0/1     ContainerCreating   0          2s
+shamaa-pod002              1/1     Running             0          148m
+```
+
+### Recreate pod 
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  delete  pod  ashu-app-684dc44c4-wb7td 
+pod "ashu-app-684dc44c4-wb7td" deleted
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  po -o wide
+NAME                                READY   STATUS    RESTARTS   AGE     IP                NODE    NOMINATED NODE   READINESS GATES
+abdo-app-6fc859b895-l76f7           1/1     Running   0          2m3s    192.168.135.35    node3   <none>           <none>
+amr-app-748c4b4569-pg5gc            1/1     Running   0          2m20s   192.168.166.166   node1   <none>           <none>
+ashu-app-684dc44c4-f6qft            1/1     Running   0          7s      192.168.135.36    node3   <none>           <none>
+hhalkhazragy-app-649bb9ffb9-7bbjh   1/1     Running   0          2m4s    192.168.166.167   node1   <none>           <none>
+```
+
+### scaling 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  scale  deployment  ashu-app  --replicas=5
+deployment.apps/ashu-app scaled
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy 
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+abdo-app           3/3     3            3           31s
+amr-app            3/3     3            3           6m29s
+ashu-app           5/5     5            5           6m32s
+hhalkhazragy-app   3/3     3 
+```
+
+### delete deployment
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl delete deployment ashu-app
+deployment.apps "ashu-app" deleted
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+abdo-app           3/3     3            3           109s
+amr-app            4/4     4            4           7m47s
+hhalkhazragy-app   2/2     2            2           7m31s
+ihor-app           5/5     5            5           7m34s
+mfarag-app         1/1     1            1           6m21s
+rjamaro-app        1/1     1            1           4m20s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+```
+
 
 
