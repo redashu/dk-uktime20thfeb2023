@@ -126,4 +126,49 @@ kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          23h
 <img src="p1.png">
 
 
+### k8s service will find all the pods with uniq label concept 
+
+### checking the label of pods 
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  po  --show-labels
+NAME                  READY   STATUS    RESTARTS   AGE   LABELS
+abdo-pod002           1/1     Running   0          98m   run=abdo-pod002
+amr-pod002            1/1     Running   0          98m   run=amr-pod002
+ashu-pod002           1/1     Running   0          99m   run=ashu-pod002
+hhalkhazragy-pod002   1/1     Running   0          96m   run=hhalkhazragy-pod002
+ihor-pod002           1/1     Running   0          98m   run=ihor-pod002
+mfarag-pod002         1/1     Running   0          98m   run=mfarag-pod002
+rjamaro-pod002        1/1     Running   0          98m   run=rjamaro-pod002
+shamaa-pod002         1/1     Running   0          96m   run=shamaa-pod002
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  po ashu-pod002   --show-labels
+NAME          READY   STATUS    RESTARTS   AGE   LABELS
+ashu-pod002   1/1     Running   0          99m   run=ashu-pod002
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+```
+
+### updating service label selector field by POd label 
+
+<img src="lbl.png">
+
+### replace commnad 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  replace  -f  nodeport.yaml --force 
+service "ashu-lb1" deleted
+service/ashu-lb1 replaced
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  service 
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+abdo-lb1           NodePort    10.108.84.178    <none>        2002:32117/TCP   8m34s
+amr-lb1            NodePort    10.98.92.1       <none>        1239:31951/TCP   22m
+ashu-lb1           NodePort    10.98.93.122     <none>        1234:30235/TCP   10s
+hhalkhazragy-101   NodePort    10.107.134.144   <none>        1982:31027/TCP   13m
+ihor-lb2           NodePort    10.96.213.201    <none>        4563:30025/TCP   21m
+kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP          23h
+mfarag-lb1         NodePort    10.102.130.53    <none>        2244:31134/TCP   23m
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  service ashu-lb1  -o wide
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+ashu-lb1   NodePort   10.98.93.122   <none>        1234:30235/TCP   24s   run=ashu-pod002
+```
+
 
