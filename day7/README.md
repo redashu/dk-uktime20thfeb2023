@@ -88,3 +88,42 @@ Containers:
 
 <img src="svco.png">
 
+### creating nodeport service in k8s 
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create  service 
+Create a service using a specified subcommand.
+
+Aliases:
+service, svc
+
+Available Commands:
+  clusterip      Create a ClusterIP service
+  externalname   Create an ExternalName service
+  loadbalancer   Create a LoadBalancer service
+  nodeport       Create a NodePort service
+
+Usage:
+  kubectl create service [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create  service  nodeport   ashu-lb1  --tcp 1234:80  --dry-run=client -o yaml >nodeport.yaml 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create  -f nodeport.yaml 
+service/ashu-lb1 created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  service 
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+ashu-lb1     NodePort    10.100.128.179   <none>        1234:31120/TCP   6s
+ihor-lb1     NodePort    10.104.52.149    <none>        3:31462/TCP      38s
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          23h
+```
+
+
+### from end user to service to pod 
+
+<img src="p1.png">
+
+
+
