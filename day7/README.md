@@ -84,3 +84,7 @@ Containers:
 
 <img src="svc1.png">
 
+### service type in k8s and service to expose app outside k8s cluster 
+
+<img src="svco.png">
+
