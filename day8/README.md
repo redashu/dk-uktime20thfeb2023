@@ -109,4 +109,31 @@ kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP          45h
 
 ```
 
+### Understanding NodePort 
+
+<img src="p.png">
+
+### creating Load Balancer service 
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  expose  deployment  ashu-ui-app  --type  LoadBalancer  --port 1234 --target-port 80 --name ashu-lb222 --dry-run=client  -o yaml  >day8_lbsvc.yam
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl create  -f  day8_lbsvc.yam 
+service/ashu-lb222 created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  svc
+NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+abdo-lb111           NodePort       10.99.236.148    <none>        2002:30183/TCP   13m
+amr-lb111            NodePort       10.109.225.40    <none>        1234:30738/TCP   13m
+ashu-lb111           NodePort       10.101.3.198     <none>        1234:30349/TCP   14m
+ashu-lb222           LoadBalancer   10.107.223.126   <pending>     1234:31533/TCP   4s
+hhalkhazragy-10111   NodePort       10.100.214.72    <none>        1982:31560/TCP   13m
+ihor-lb111           NodePort       10.109.113.221   <none>        2365:31000/TCP   11m
+kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP          45h
+mfarag-lb111         NodePort       10.103.34.89     <none>        2244:30801/TCP   14m
+rjamaro-lb           NodePort       10.96.4.107      <none>        3333:30952/TCP   13m
+shamaa-lb111         NodePort       10.98.209.4      <none>        1244:30129/TCP   12m
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+```
+
+
+
 
