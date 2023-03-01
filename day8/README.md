@@ -223,6 +223,97 @@ logs.txt
 [ashu@ip-172-31-29-207 k8s-app-deploy]$ 
 ```
 
+### Pod scaling 
+
+<img src="pods.png">
+
+### Deployment -- create pods -- we are putting limits in POd 
+
+```
+apiVersion: apps/v1 # apiserver Version to Understand request
+kind: Deployment 
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-ui-app
+  name: ashu-ui-app # name of deployment 
+spec:
+  replicas: 1 # number of pods 
+  selector:
+    matchLabels:
+      app: ashu-ui-app
+  strategy: {}
+  template: # any number of pod we want to create --i.e using template 
+    metadata:
+      creationTimestamp: null
+      labels: # lable of my Pods 
+        app: ashu-ui-app
+    spec:
+      containers:
+      - image: docker.io/dockerashu/newapp:v1
+        name: newapp
+        ports:
+        - containerPort: 80
+        resources: 
+          requests:
+            memory: 100M
+            cpu: 100m # 100 milicore 
+          limits:
+            memory: 400M
+            cpu: 200m 
+        env: # to create or pass Env variable value 
+        - name: deploy  # name of Env 
+          value: ui3 # value of ENv--values ui1 , ui2 , ui3 
+status: {}
+
+```
+
+### apply changes 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create -f day8_deployment.yaml 
+deployment.apps/ashu-ui-app created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   1/1     1            1           4s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl apply  -f day8_deployment.yaml 
+Warning: resource deployments/ashu-ui-app is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/ashu-ui-app configured
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  po 
+NAME                           READY   STATUS        RESTARTS   AGE
+ashu-ui-app-5dd986f45c-glrd9   1/1     Running       0          4s
+ashu-ui-app-7f96876cbf-2b5jp   1/1     Terminating   0          38s
+```
+
+### if some monitoring / metric server is running then we can check the pod & node resource consumption 
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  top 
+Display Resource (CPU/Memory) usage.
+
+ The top command allows you to see the resource consumption for nodes or pods.
+
+ This command requires Metrics Server to be correctly configured and working on the server.
+
+Available Commands:
+  node          Display resource (CPU/memory) usage of nodes
+  pod           Display resource (CPU/memory) usage of pods
+
+Usage:
+  kubectl top [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  top pods
+NAME                           CPU(cores)   MEMORY(bytes)   
+ashu-ui-app-5dd986f45c-glrd9   1m           17Mi            
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  top nodes
+NAME            CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+control-plane   177m         4%     3480Mi          22%       
+node1           75m          3%     651Mi           17%       
+node3           67m          3%     748Mi           19% 
+```
+
 
 
 
