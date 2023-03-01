@@ -314,6 +314,79 @@ node1           75m          3%     651Mi           17%
 node3           67m          3%     748Mi           19% 
 ```
 
+### manual horizental scaling of pods 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   1/1     1            1           5m11s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  scale  deployment  ashu-ui-app --replicas=5
+deployment.apps/ashu-ui-app scaled
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   1/5     5            1           5m26s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   5/5     5            5           5m32s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get po -owide 
+NAME                           READY   STATUS    RESTARTS   AGE    IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-ui-app-5dd986f45c-glrd9   1/1     Running   0          5m4s   192.168.135.2     node3   <none>           <none>
+ashu-ui-app-5dd986f45c-tt4c5   1/1     Running   0          14s    192.168.166.157   node1   <none>           <none>
+ashu-ui-app-5dd986f45c-wzrw2   1/1     Running   0          14s    192.168.135.6     node3   <none>           <none>
+ashu-ui-app-5dd986f45c-zs4vx   1/1     Running   0          14s    192.168.166.155   node1   <none>           <none>
+ashu-ui-app-5dd986f45c-zwm4d   1/1     Running   0          14s    192.168.166.151   node1   <none>           <none>
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+
+
+```
+
+### Introduction HPA in k8s 
+
+<img src="hpa.png">
+
+## k8s api-resources 
+
+<img src="apis.png">
+
+### Hpa implementations 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   1/1     1            1           31m
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  autoscale deployment  ashu-ui-app --min=3 --max=30 --cpu-percent=70  --dry-run=client -o yaml 
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: null
+  name: ashu-ui-app
+spec:
+  maxReplicas: 30
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ashu-ui-app
+  targetCPUUtilizationPercentage: 70
+status:
+  currentReplicas: 0
+  desiredReplicas: 0
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  autoscale deployment  ashu-ui-app --min=3 --max=30 --cpu-percent=70  --dry-run=client -o yaml >hpa.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl apply -f hpa.yaml 
+horizontalpodautoscaler.autoscaling/ashu-ui-app created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get hpa
+NAME          REFERENCE                TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashu-ui-app   Deployment/ashu-ui-app   <unknown>/70%   3         30        0          3s
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   1/1     1            1           33m
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app   3/3     3            3           33m
+```
+
+
 
 
 
