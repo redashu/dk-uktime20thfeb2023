@@ -385,6 +385,10 @@ ashu-ui-app   1/1     1            1           33m
 NAME          READY   UP-TO-DATE   AVAILABLE   AGE
 ashu-ui-app   3/3     3            3           33m
 ```
+### Ingress controller 
+
+<img src="ing.png">
+
 
 
 
