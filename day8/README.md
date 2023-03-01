@@ -186,6 +186,43 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 ```
 
 
+### task1 solution 
+
+```
+691  kubectl  run  ashupod1  --image=busybox --command ping fb.com  --dry-run=client -oyaml >task1.yaml 
+  692  kubectl  create -f  task1.yaml 
+  693  kubectl  get  pod 
+  694  kubectl logs  ashupod1 
+  695  kubectl logs  ashupod1   >logs.txt 
+  696  ls
+  697  hitsor
+  698  history 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ ls
+ashu_deployment.yaml  ashupod1.yaml  day8_deployment.yaml  day8_lbsvc.yam  day8_nodeport.yaml  logs.txt  newpod.yaml  nodeport.yaml  ns.yaml  task1.yaml
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  exec -it ashupod1 -- sh 
+/ # ls /
+bin    dev    etc    home   lib    lib64  proc   root   sys    tmp    usr    var
+/ # mkdir /opt
+/ # ls 
+bin    dev    etc    home   lib    lib64  opt    proc   root   sys    tmp    usr    var
+/ # exit
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl cp logs.txt ashupod1:/opt/
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  exec -it ashupod1 -- ls /opt
+logs.txt
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get po ashupod1 -o wide
+NAME       READY   STATUS    RESTARTS   AGE   IP                NODE    NOMINATED NODE   READINESS GATES
+ashupod1   1/1     Running   0          97s   192.168.166.143   node1   <none>           <none>
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  exec -it ashupod1 -- sh 
+/ # 
+/ # cd /opt/
+/opt # ls
+logs.txt
+/opt # echo "node1" >>logs.txt 
+/opt # exit
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+```
+
 
 
 
