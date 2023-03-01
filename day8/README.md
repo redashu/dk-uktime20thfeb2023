@@ -174,6 +174,17 @@ No resources found in ashu-space namespace.
 No resources found in ashu-space namespace.
 ```
 
+### Checking current namespace 
+
+```
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  config  get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-space
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+
+
+```
+
 
 
 
