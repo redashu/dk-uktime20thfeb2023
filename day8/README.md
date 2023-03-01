@@ -134,6 +134,48 @@ shamaa-lb111         NodePort       10.98.209.4      <none>        1244:30129/TC
 [ashu@ip-172-31-29-207 k8s-app-deploy]$ 
 ```
 
+### Load balancer & NodePort 
+
+<img src="lbnp.png">
+
+### Understanding & creating namespace in k8s 
+
+```
+ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  namespaces 
+NAME                   STATUS   AGE
+default                Active   15d
+ingress-nginx          Active   15d
+kube-node-lease        Active   15d
+kube-public            Active   15d
+kube-system            Active   15d
+kubernetes-dashboard   Active   15d
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  pods
+No resources found in default namespace.
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  deploy 
+No resources found in default namespace.
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create   ns  ashu-space  --dry-run=client -o yaml >ns.yaml 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  create   ns  ashu-space  
+namespace/ashu-space created
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  get  ns
+NAME                   STATUS   AGE
+ashu-space             Active   8s
+default                Active   15d
+ingress-nginx          Active   15d
+kube-node-lease        Active   15d
+kube-public            Active   15d
+kube-system            Active   15d
+kubernetes-dashboard   Active   15d
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl  config  set-context  --current --namespace=ashu-space 
+Context "kubernetes-admin@kubernetes" modified.
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ 
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  po
+No resources found in ashu-space namespace.
+[ashu@ip-172-31-29-207 k8s-app-deploy]$ kubectl   get  deploy 
+No resources found in ashu-space namespace.
+```
+
+
+
 
 
 
