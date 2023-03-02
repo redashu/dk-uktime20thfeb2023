@@ -325,6 +325,83 @@ bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbi
 ashuc1
 ```
 
+### creating volume in docker 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  volume  ls
+DRIVER    VOLUME NAME
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  volume  create  ashu-vol1 
+ashu-vol1
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  volume  ls
+DRIVER    VOLUME NAME
+local     ashu-vol1
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  volume  inspect  ashu-vol1 
+[
+    {
+        "CreatedAt": "2023-03-02T11:34:03Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/ashu-vol1/_data",
+        "Name": "ashu-vol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+
+```
+
+### creating container with volume 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker run -itd --name ashuc1  -v  ashu-vol1:/mydata:rw  alpine sleep 1000
+f3f8e3eb339ea9ab16642b7ec196d7ca610d37a556a68f3ff7ee6b39cd56f2c4
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  exec -it ashuc1 sh 
+/ # ls /
+bin     etc     lib     mnt     opt     root    sbin    sys     usr
+dev     home    media   mydata  proc    run     srv     tmp     var
+/ # cd /mydata/
+/mydata # ls
+/mydata # mkdir hello world
+/mydata # ls
+hello  world
+/mydata # echo hii  >a.txt 
+/mydata # ls
+a.txt  hello  world
+/mydata # exit
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker rm ashuc1 -f
+ashuc1
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+```
+
+### sharing the same volume with other container 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  run -it --rm  -v  ashu-vol1:/opt/newdata:ro  oraclelinux:8.4  bash 
+Unable to find image 'oraclelinux:8.4' locally
+8.4: Pulling from library/oraclelinux
+a4df6f21af84: Pull complete 
+Digest: sha256:b81d5b0638bb67030b207d28586d0e714a811cc612396dbe3410db406998b3ad
+Status: Downloaded newer image for oraclelinux:8.4
+[root@acdfc055d4a8 /]# 
+[root@acdfc055d4a8 /]# 
+[root@acdfc055d4a8 /]# cd  /opt/newdata/
+[root@acdfc055d4a8 newdata]# ls
+a.txt  hello  world
+[root@acdfc055d4a8 newdata]# rm a.txt 
+rm: remove regular file 'a.txt'? y
+rm: cannot remove 'a.txt': Read-only file system
+[root@acdfc055d4a8 newdata]# ls
+a.txt  hello  world
+[root@acdfc055d4a8 newdata]# exit
+exit
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+```
+
+
 
 
 
