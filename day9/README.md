@@ -278,6 +278,54 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9I
 
 ```
 
+## Database deployment -- Understanding in k8s 
+
+<img src="k8sdb.png">
+
+### Storage in container world
+
+<img src="st.png">
+
+### Storage in Docker -- Docker volume 
+
+### Docker is not having persistent storage for containers 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  ps
+CONTAINER ID   IMAGE     COMMAND        CREATED              STATUS              PORTS     NAMES
+ef3fb3b18e8f   alpine    "sleep 1000"   46 seconds ago       Up 45 seconds                 hhalkhazragy1
+7616e00253a8   alpine    "sleep 1000"   58 seconds ago       Up 57 seconds                 mfarag-c1
+84cfdc321cf7   alpine    "sleep 1000"   About a minute ago   Up 59 seconds                 shamaac1
+3913113c386a   alpine    "sleep 1000"   About a minute ago   Up About a minute             ashuc1
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  exec -it  ashuc1 sh 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # mkdir okk fine 
+/ # ls
+bin    dev    etc    fine   home   lib    media  mnt    okk    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # echo hello.txt 
+hello.txt
+/ # ls
+bin    dev    etc    fine   home   lib    media  mnt    okk    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # exti
+sh: exti: not found
+/ # exit
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  rm ashuc1 -f
+ashuc1
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  run -itd --name ashuc1 alpine sleep 1000
+36161f63ef2874aefb94663e80d50697930f636078350401d959dfe6ab5b65a2
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  exec -it  ashuc1 sh 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # exit
+[ashu@ip-172-31-29-207 ashu-app-images]$ docker  rm ashuc1 -f
+ashuc1
+```
+
+
 
 
 
