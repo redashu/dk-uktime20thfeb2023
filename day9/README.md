@@ -108,6 +108,118 @@ NAME                              READY   STATUS    RESTARTS   AGE
 ashu-final-app-7549b67bfb-rv7kg   1/1     Running   0          28s
 [ashu@ip-172-31-29-207 k8s-best-way]$ 
 ```
+### implement HPA 
+
+```
+[ashu@ip-172-31-29-207 k8s-best-way]$ ls
+confimap.yaml  final_deployment.yaml
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl  get  deploy 
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-final-app   1/1     1            1           5m19s
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl  autoscale  deployment  ashu-final-app  --min=3  --max=15  --cpu-percent=80 --dry-run=client -o yaml  >hpa.yaml 
+[ashu@ip-172-31-29-207 k8s-best-way]$ ls
+confimap.yaml  final_deployment.yaml  hpa.yaml
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl  apply -f  . 
+configmap/ashu-cm configured
+deployment.apps/ashu-final-app configured
+horizontalpodautoscaler.autoscaling/ashu-final-app created
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  hpa 
+NAME             REFERENCE                   TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashu-final-app   Deployment/ashu-final-app   <unknown>/80%   3         15        1          20s
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  deploy 
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-final-app   3/3     3            3           7m48s
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  po -o wide
+NAME                              READY   STATUS    RESTARTS   AGE     IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-final-app-7549b67bfb-5qcg9   1/1     Running   0          20s     192.168.166.191   node1   <none>           <none>
+ashu-final-app-7549b67bfb-fptsq   1/1     Running   0          20s     192.168.135.36    node3   <none>           <none>
+ashu-final-app-7549b67bfb-rv7kg   1/1     Running   0          7m55s   192.168.135.31    node3   <none>           <none>
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+```
+
+### with Ingress ---> we don't have to create NodePort or LB service type 
+
+### creating clusterIP type service 
+
+```
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  deploy 
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-final-app   3/3     3            3           19m
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   expose deployment  ashu-final-app  --type ClusterIP --port 1234 --target-port 80 --name ashulb1  --dry-run=client -o yaml >clusterip.yaml 
+[ashu@ip-172-31-29-207 k8s-best-way]$ ls
+clusterip.yaml  confimap.yaml  final_deployment.yaml  hpa.yaml
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl apply -f . 
+service/ashulb1 created
+configmap/ashu-cm configured
+deployment.apps/ashu-final-app configured
+horizontalpodautoscaler.autoscaling/ashu-final-app configured
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+ashulb1   ClusterIP   10.108.198.236   <none>        1234/TCP   23s
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+```
+
+### checking overall things 
+
+```
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get   deploy,cm,hpa,svc
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ashu-final-app   3/3     3            3           22m
+
+NAME                         DATA   AGE
+configmap/ashu-cm            1      22m
+configmap/kube-root-ca.crt   1      23h
+
+NAME                                                 REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/ashu-final-app   Deployment/ashu-final-app   1%/80%    3         15        3          15m
+
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/ashulb1   ClusterIP   10.108.198.236   <none>        1234/TCP   2m2s
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+
+
+```
+
+### Nginx app routing rule yaml 
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ashu-app-rule # routing rule name 
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx # name of ingress product class 
+  rules:
+  - host: me.ashutoshh.in # domain name of my app 
+    http: # remove - from here 
+      paths:
+      - path: /  # my app home page 
+        pathType: Prefix
+        backend:
+          service:
+            name: ashulb1 # name of service to forward traffic 
+            port:
+              number: 1234 # port of service 
+```
+
+### apply ingress and check 
+
+```
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl  apply -f . 
+ingress.networking.k8s.io/ashu-app-rule created
+service/ashulb1 configured
+configmap/ashu-cm configured
+deployment.apps/ashu-final-app configured
+horizontalpodautoscaler.autoscaling/ashu-final-app configured
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  ingress  
+NAME            CLASS   HOSTS             ADDRESS   PORTS   AGE
+ashu-app-rule   nginx   me.ashutoshh.in             80      19s
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+```
+
 
 
 
