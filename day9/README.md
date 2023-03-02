@@ -401,6 +401,26 @@ exit
 [ashu@ip-172-31-29-207 ashu-app-images]$ 
 ```
 
+### access docker volume data without container 
+
+```
+ec2-user@ip-172-31-29-207 ~]$ sudo -i
+[root@ip-172-31-29-207 ~]# cd  /var/lib/docker/
+[root@ip-172-31-29-207 docker]# ls
+buildkit  containers  image  network  overlay2  plugins  runtimes  swarm  tmp  trust  volumes
+[root@ip-172-31-29-207 docker]# cd  volumes/
+[root@ip-172-31-29-207 volumes]# ls
+abdo-vol1  amr-vol1  ashu-vol1  backingFsBlockDev  metadata.db  mfarag-vol1  shamaa-vol1
+[root@ip-172-31-29-207 volumes]# cd  ashu-vol1/
+[root@ip-172-31-29-207 ashu-vol1]# ls
+_data
+[root@ip-172-31-29-207 ashu-vol1]# cd _data/
+[root@ip-172-31-29-207 _data]# ls
+a.txt  hello  world
+[root@ip-172-31-29-207 _data]# 
+
+```
+
 
 
 
