@@ -220,6 +220,30 @@ ashu-app-rule   nginx   me.ashutoshh.in             80      19s
 [ashu@ip-172-31-29-207 k8s-best-way]$ 
 ```
 
+### Deploy / delete entire directory 
+
+```
+ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  delete -f  k8s-best-way/
+ingress.networking.k8s.io "ashu-app-rule" deleted
+service "ashulb1" deleted
+configmap "ashu-cm" deleted
+deployment.apps "ashu-final-app" deleted
+horizontalpodautoscaler.autoscaling "ashu-final-app" deleted
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  apply  -f  k8s-best-way/
+ingress.networking.k8s.io/ashu-app-rule created
+service/ashulb1 created
+configmap/ashu-cm created
+deployment.apps/ashu-final-app created
+horizontalpodautoscaler.autoscaling/ashu-final-app created
+[ashu@ip-172-31-29-207 ashu-app-images]$ 
+
+
+```
+
+
 
 
 
