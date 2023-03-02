@@ -240,9 +240,43 @@ deployment.apps/ashu-final-app created
 horizontalpodautoscaler.autoscaling/ashu-final-app created
 [ashu@ip-172-31-29-207 ashu-app-images]$ 
 
-
 ```
 
+### dashboard of k8s 
+
+### deploy it 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+
+### check token 
+
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl  get  secret  -n kubernetes-dashboard 
+NAME                               TYPE                                  DATA   AGE
+default-token-jkx6x                kubernetes.io/service-account-token   3      16d
+kubernetes-dashboard-certs         Opaque                                0      16d
+kubernetes-dashboard-csrf          Opaque                                1      16d
+kubernetes-dashboard-key-holder    Opaque                                2      16d
+kubernetes-dashboard-token-dp9tv   kubernetes.io/service-account-token   3      16d
+[ashu@ip-172-31-29-207 ashu-app-images]$ kubectl describe   secret kubernetes-dashboard-token-dp9tv    -n kubernetes-dashboard 
+Name:         kubernetes-dashboard-token-dp9tv
+Namespace:    kubernetes-dashboard
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: kubernetes-dashboard
+              kubernetes.io/service-account.uid: 1a6699ac-198a-4778-b1ee-c05bbd5e7751
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1099 bytes
+namespace:  20 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9I
+
+
+```
 
 
 
