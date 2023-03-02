@@ -57,5 +57,58 @@ job.batch/ingress-nginx-admission-patch    1/1           6s         16d
 
 ```
 
+### lets follow the best way to deploy app in k8s -- as per Industry standard 
+
+### creating directory and putting everything there 
+
+### creating deployment file 
+```
+[ashu@ip-172-31-29-207 ashu-app-images]$ mkdir  k8s-best-way 
+[ashu@ip-172-31-29-207 ashu-app-images]$ cd  k8s-best-way/
+[ashu@ip-172-31-29-207 k8s-best-way]$ ls
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl create deployment  ashu-final-app  --image=docker.io/dockerashu/newapp:v1  --port 80 --dry-run=client  -o yaml  >final_deployment.yaml 
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+
+```
+
+### Introduction to COnfigmap 
+
+<img src="cm.png">
+
+### creating configmap to store variable in key value format 
+
+```
+kubectl  create  configmap   ashu-cm  --from-literal  myapp=ui2 --dry-run=client -o yaml >confimap.yaml[ashu@ip-172-31-29-207 k8s-best-way]$ 
+```
+
+### calling configmap in deployment file 
+
+<img src="callcm.png">
+
+### lets deploy it 
+
+```
+[ashu@ip-172-31-29-207 k8s-best-way]$ ls
+confimap.yaml  final_deployment.yaml
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl  apply -f  . 
+configmap/ashu-cm created
+deployment.apps/ashu-final-app created
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  configmap 
+NAME               DATA   AGE
+ashu-cm            1      10s
+kube-root-ca.crt   1      23h
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  deploy 
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-final-app   1/1     1            1           18s
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  rs
+NAME                        DESIRED   CURRENT   READY   AGE
+ashu-final-app-7549b67bfb   1         1         1       25s
+[ashu@ip-172-31-29-207 k8s-best-way]$ kubectl   get  po 
+NAME                              READY   STATUS    RESTARTS   AGE
+ashu-final-app-7549b67bfb-rv7kg   1/1     Running   0          28s
+[ashu@ip-172-31-29-207 k8s-best-way]$ 
+```
+
+
 
 
