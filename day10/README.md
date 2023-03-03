@@ -243,5 +243,33 @@ status: {}
 
 ```
 
+### creating deploy of db and check 
+
+```
+[ashu@ip-172-31-29-207 final-day-k8s]$ ls
+db.yaml  private_imgdeploy.yaml  secret.yaml  sql_secret.yaml
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl apply -f db.yaml 
+deployment.apps/ashu-db created
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  secret
+NAME                  TYPE                                  DATA   AGE
+ashu-db-pass          Opaque                                1      9m52s
+ashu-img-secret       kubernetes.io/dockerconfigjson        1      25m
+default-token-6fpfp   kubernetes.io/service-account-token   3      47h
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  deploy 
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-db   0/1     1            0           10s
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  po
+NAME                      READY   STATUS              RESTARTS   AGE
+ashu-db-fffdcdf4b-t9cfj   0/1     ContainerCreating   0          13s
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  po
+NAME                      READY   STATUS    RESTARTS   AGE
+ashu-db-fffdcdf4b-t9cfj   1/1     Running   0          18s
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+
+
+
+```
+
+
 
 
