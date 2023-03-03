@@ -444,6 +444,55 @@ ashu-dep-5b5f9c849c-c8tfr   0/1     ContainerCreating   0          45s
 [ashu@ip-172-31-29-207 final-day-k8s]$ 
 ```
 
+### Solution of Docker volume question 
+
+```
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker volume create  ashuvol9 
+ashuvol9
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker volume ls
+DRIVER    VOLUME NAME
+local     ashuvol9
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker run -tid --name ashuc1 -v  ashuvol9:/mnt/data:rw  busybox  sleep 1000
+4ef26e37538c6b96c3c971168686da6c9efddb86cf908bef78aadd5a5486d894
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker  ps
+CONTAINER ID   IMAGE     COMMAND        CREATED          STATUS          PORTS     NAMES
+4ef26e37538c   busybox   "sleep 1000"   15 seconds ago   Up 14 seconds             ashuc1
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker  exec -it ashuc1 sh 
+/ # cd  /mnt/data/
+/mnt/data # ls
+/mnt/data # mkdir hello world
+/mnt/data # ls
+hello  world
+/mnt/data # echo hii  >a.txt
+/mnt/data # ls
+a.txt  hello  world
+/mnt/data # exit
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+
+====
+ 961  docker volume create ashuvol99 
+  962  docker volume ls
+  963  docker run -itd --name ashuc2 -v  ashuvol9:/mnt/me:ro  -v  ashuvol99:/mnt/new:rw  alpine sleep 10000
+  964  history 
+[ashu@ip-172-31-29-207 final-day-k8s]$ docker  exec -it  ashuc2 sh 
+/ # cd /mnt/
+/mnt # ls
+me   new
+/mnt # cp -rfv  me/*  new/
+'me/a.txt' -> 'new/a.txt'
+'me/hello' -> 'new/hello'
+'me/world' -> 'new/world'
+/mnt # cd  new/
+/mnt/new # ls
+a.txt  hello  world
+/mnt/new # exit
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+```
+
+
+
+
+
 
 
 
