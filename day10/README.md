@@ -489,6 +489,55 @@ a.txt  hello  world
 [ashu@ip-172-31-29-207 final-day-k8s]$ 
 ```
 
+## Storage in k8s 
+
+### understanding Volume -- 
+<img src="vol1.png">
+
+
+### volume storage sources 
+
+<img src="src.png">
+
+### creating mysql POd with inbuilt volume 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashu-pod1
+  name: ashu-pod1
+spec:
+  volumes: # for creating volumes 
+  - name: ashuvol1 
+    hostPath: # using cluster Nodes for storage source 
+      path: /data/ashu # this location in minion node will be created
+      type: DirectoryOrCreate # if not present then create it
+  containers:
+  - image: mysql
+    name: ashu-pod1
+    ports:
+    - containerPort: 3306
+    resources: {}
+    volumeMounts: # mounting volume to the contaienrs
+    - name: ashuvol1
+      mountPath: /var/lib/mysql/ # default mysql db location 
+    env: 
+    - name: MYSQL_ROOT_PASSWORD
+      value: "Mobi@098#"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### Understanding PV & pvc 
+
+<img src="pv.png">
+
+
 
 
 
