@@ -167,3 +167,81 @@ ashu-dep1-d558cdf96-2ssxm   1/1     Running   0          10s
 [ashu@ip-172-31-29-207 final-day-k8s]$ 
 ```
 
+### understanding database deployment in k8s and its need also 
+
+<img src="need.png">
+
+### creating secret to store root password of Env 
+
+```
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  create  secret  
+Create a secret using specified subcommand.
+
+Available Commands:
+  docker-registry   Create a secret for use with a Docker registry
+  generic           Create a secret from a local file, directory, or literal value
+  tls               Create a TLS secret
+
+Usage:
+  kubectl create secret [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  create  secret  generic  ashu-db-pass  --from-literal   sqlpassword="MobiDb@098" --dry-run=client -o yaml  >sql_secret.yaml 
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl apply -f sql_secret.yaml 
+secret/ashu-db-pass created
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  secret
+NAME                  TYPE                                  DATA   AGE
+ashu-db-pass          Opaque                                1      4s
+ashu-img-secret       kubernetes.io/dockerconfigjson        1      15m
+default-token-6fpfp   kubernetes.io/service-account-token   3      47h
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+
+```
+
+### creating db yaml 
+
+```
+ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  create  deployment  ashu-db --image=mysql --port 3306 --dry-run=client -o yaml  >db.yaml 
+```
+
+### after updating yaml
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-db
+  name: ashu-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-db
+    spec:
+      containers:
+      - image: mysql
+        name: mysql
+        ports:
+        - containerPort: 3306
+        resources: {}
+        env: 
+        - name: MYSQL_ROOT_PASSWORD # original env variable 
+          valueFrom:
+            secretKeyRef:
+              name: ashu-db-pass # name of secret 
+              key: sqlpassword # key of secret 
+status: {}
+
+```
+
+
+
