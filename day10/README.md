@@ -267,8 +267,67 @@ ashu-db-fffdcdf4b-t9cfj   1/1     Running   0          18s
 [ashu@ip-172-31-29-207 final-day-k8s]$ 
 
 
+```
+
+### creating database in pod container 
 
 ```
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  po
+NAME                      READY   STATUS    RESTARTS   AGE
+ashu-db-fffdcdf4b-t9cfj   1/1     Running   0          64s
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  exec -it  ashu-db-fffdcdf4b-t9cfj  -- bash 
+bash-4.4# 
+bash-4.4# 
+bash-4.4# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database mobiindia;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mobiindia          |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit;
+Bye
+bash-4.4# exit
+exit
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+```
+
+
 
 
 
