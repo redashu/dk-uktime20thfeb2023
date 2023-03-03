@@ -326,6 +326,125 @@ bash-4.4# exit
 exit
 [ashu@ip-172-31-29-207 final-day-k8s]$ 
 ```
+### Single YAML and Multiple APi-resources hosting 
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashu-splunkns
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: sp-lic
+  namespace: ashu-splunkns # namespace info
+data:
+  SPLUNK_START_ARGS: --accept-license
+---
+apiVersion: v1
+data:
+  SPLUNK_PASSWORD: TW9iaUAwOTgj
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: sp-pass
+  namespace: ashu-splunkns
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-dep
+  name: ashu-dep
+  namespace: ashu-splunkns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels: # label of pods 
+        app: ashu-dep
+    spec:
+      containers:
+      - image: splunk/splunk:latest
+        name: splunk
+        ports:
+        - containerPort: 8000
+        resources: {}
+        envFrom:
+        - configMapRef:
+            name: sp-lic
+        - secretRef:
+            name: sp-pass 
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+  namespace: ashu-splunkns
+spec:
+  ports:
+  - name: 1234-8000
+    port: 1234
+    protocol: TCP
+    targetPort: 8000
+  selector: # pod finder using pod labels 
+    app: ashu-dep # label of pods 
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+### deploy it 
+
+```
+[ashu@ip-172-31-29-207 final-day-k8s]$ ls
+ashusplunk.yaml  db.yaml  private_imgdeploy.yaml  secret.yaml  sql_secret.yaml
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl apply -f ashusplunk.yaml 
+namespace/ashu-splunkns created
+configmap/sp-lic created
+secret/sp-pass created
+deployment.apps/ashu-dep created
+service/ashusvc1 created
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl   get  cm,secret,deploy,svc -n ashu-splunkns 
+NAME                         DATA   AGE
+configmap/kube-root-ca.crt   1      24s
+configmap/sp-lic             1      24s
+
+NAME                         TYPE                                  DATA   AGE
+secret/default-token-zpbvs   kubernetes.io/service-account-token   3      24s
+secret/sp-pass               Opaque                                1      24s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ashu-dep   0/1     1            0           24s
+
+NAME               TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc1   NodePort   10.96.134.54   <none>        1234:32098/TCP   24s
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get po -n ashu-splunks
+No resources found in ashu-splunks namespace.
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get po -n ashu-splunkns
+NAME                        READY   STATUS              RESTARTS   AGE
+ashu-dep-5b5f9c849c-c8tfr   0/1     ContainerCreating   0          45s
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+```
+
+
 
 
 
