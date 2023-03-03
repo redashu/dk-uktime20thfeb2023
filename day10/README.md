@@ -537,6 +537,76 @@ status: {}
 
 <img src="pv.png">
 
+### Using Helm as k8s to depoy apps 
+
+### commands 
+
+```
+[ashu@ip-172-31-29-207 final-day-k8s]$ helm repo add ashu-repo https://charts.bitnami.com/bitnami
+"ashu-repo" has been added to your repositories
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ helm repo ls
+NAME            URL                               
+ashu-repo       https://charts.bitnami.com/bitnami
+[ashu@ip-172-31-29-207 final-day-k8s]$ helm install ashu-ui-app  ashu-repo/nginx 
+NAME: ashu-ui-app
+LAST DEPLOYED: Fri Mar  3 11:01:16 2023
+NAMESPACE: ashu-space
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: nginx
+CHART VERSION: 13.2.28
+APP VERSION: 1.23.3
+
+** Please be patient while the chart is being deployed **
+NGINX can be accessed through the following DNS name from within your cluster:
+
+    ashu-ui-app-nginx.ashu-space.svc.cluster.local (port 80)
+
+To access NGINX from outside the cluster, follow the steps below:
+
+1. Get the NGINX URL by running these commands:
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: 'kubectl get svc --namespace ashu-space -w ashu-ui-app-nginx'
+
+    export SERVICE_PORT=$(kubectl get --namespace ashu-space -o jsonpath="{.spec.ports[0].port}" services ashu-ui-app-nginx)
+    export SERVICE_IP=$(kubectl get svc --namespace ashu-space ashu-ui-app-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    echo "http://${SERVICE_IP}:${SERVICE_PORT}"
+[ashu@ip-172-31-29-207 final-day-k8s]$ helm ls
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+ashu-ui-app     ashu-space      1               2023-03-03 11:01:16.533632651 +0000 UTC deployed        nginx-13.2.28   1.23.3     
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+```
+
+
+---
+
+```
+ashu@ip-172-31-29-207 final-day-k8s]$ helm ls
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+ashu-ui-app     ashu-space      1               2023-03-03 11:01:16.533632651 +0000 UTC deployed        nginx-13.2.28   1.23.3     
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  deploy
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-ui-app-nginx   1/1     1            1           3m17s
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl   get  svc
+NAME                TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+ashu-ui-app-nginx   LoadBalancer   10.96.209.209   <pending>     80:30662/TCP   3m23s
+[ashu@ip-172-31-29-207 final-day-k8s]$ helm uninstall ashu-ui-app
+release "ashu-ui-app" uninstalled
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl  get  deploy
+No resources found in ashu-space namespace.
+[ashu@ip-172-31-29-207 final-day-k8s]$ kubectl   get  svc
+No resources found in ashu-space namespace.
+[ashu@ip-172-31-29-207 final-day-k8s]$ 
+```
+
 
 
 
